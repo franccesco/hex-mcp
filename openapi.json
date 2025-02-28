@@ -1,0 +1,1692 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"SemanticLayerSyncResponsePayload": {
+				"description": "Response format returned by the runProject endpoint\n\nWill eventually contain more information about the conversion outcome\nwhen the conversion logic is built out.",
+				"properties": {},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TraceId": {
+				"type": "string",
+				"description": "A unique identifier for this API request. The Hex Support team may request this value when debugging an issue."
+			},
+			"TsoaErrorResponsePayload": {
+				"properties": {
+					"details": {
+						"type": "string"
+					},
+					"traceId": {
+						"$ref": "#/components/schemas/TraceId"
+					},
+					"reason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"reason"
+				],
+				"type": "object"
+			},
+			"EnumValues_typeofSemanticLayerSyntaxEnum_": {
+				"type": "string",
+				"enum": [
+					"LOOK_ML",
+					"CUBE",
+					"METRICFLOW",
+					"HEX_SL"
+				]
+			},
+			"SemanticLayerSyntaxEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofSemanticLayerSyntaxEnum_"
+			},
+			"Record_string.Record_string.HexSLTypes.DataType__": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"MetricflowModelSchemas": {
+				"$ref": "#/components/schemas/Record_string.Record_string.HexSLTypes.DataType__"
+			},
+			"SemanticModelsSyncResponsePayload": {
+				"properties": {
+					"traceId": {
+						"type": "string"
+					},
+					"warnings": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"skipped": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object"
+					},
+					"debug": {
+						"properties": {
+							"metricflowModelSchemas": {
+								"$ref": "#/components/schemas/MetricflowModelSchemas"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"required": [
+					"traceId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SemanticModelId": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique ID for a Hex semantic model. This can be found from the semantic\nmodels admin panel (in Settings).",
+				"pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+			},
+			"ProjectId": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique ID for a Hex project. This can be found in the Variables side bar of the Logic View of a project, or by visiting the Project, and copying the UUID after `hex` in the URL.",
+				"pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+			},
+			"EnumValues_typeofProjectTypeApiEnum_": {
+				"type": "string",
+				"enum": [
+					"PROJECT",
+					"COMPONENT"
+				]
+			},
+			"ProjectTypeApiEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofProjectTypeApiEnum_",
+				"description": "The type of the ProjectApiResource being returned."
+			},
+			"Timestamp": {
+				"type": "string",
+				"format": "timestamp",
+				"description": "An ISO 8601 timestamp with timezone like 1970-01-01T00:00:00Z."
+			},
+			"EnumValues_typeofScheduleCadenceApiEnum_": {
+				"type": "string",
+				"enum": [
+					"HOURLY",
+					"DAILY",
+					"WEEKLY",
+					"MONTHLY",
+					"CUSTOM"
+				]
+			},
+			"ScheduleCadenceApiEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofScheduleCadenceApiEnum_",
+				"description": "Types of cadence of a schedule for a Hex project."
+			},
+			"TimezoneDesignator": {
+				"type": "string",
+				"description": "An ISO 8601 timezone designator like +08:00."
+			},
+			"EnumValues_typeofDayOfWeekApiEnum_": {
+				"type": "string",
+				"enum": [
+					"SUNDAY",
+					"MONDAY",
+					"TUESDAY",
+					"WEDNESDAY",
+					"THURSDAY",
+					"FRIDAY",
+					"SATURDAY"
+				]
+			},
+			"DayOfWeekApiEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofDayOfWeekApiEnum_"
+			},
+			"ScheduleApiResource": {
+				"properties": {
+					"cadence": {
+						"$ref": "#/components/schemas/ScheduleCadenceApiEnum"
+					},
+					"enabled": {
+						"type": "boolean"
+					},
+					"hourly": {
+						"properties": {
+							"timezone": {
+								"$ref": "#/components/schemas/TimezoneDesignator"
+							},
+							"minute": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 59
+							}
+						},
+						"required": [
+							"timezone",
+							"minute"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"daily": {
+						"properties": {
+							"timezone": {
+								"$ref": "#/components/schemas/TimezoneDesignator"
+							},
+							"minute": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 59
+							},
+							"hour": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 23
+							}
+						},
+						"required": [
+							"timezone",
+							"minute",
+							"hour"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"weekly": {
+						"properties": {
+							"timezone": {
+								"$ref": "#/components/schemas/TimezoneDesignator"
+							},
+							"minute": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 59
+							},
+							"hour": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 23
+							},
+							"dayOfWeek": {
+								"$ref": "#/components/schemas/DayOfWeekApiEnum"
+							}
+						},
+						"required": [
+							"timezone",
+							"minute",
+							"hour",
+							"dayOfWeek"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"monthly": {
+						"properties": {
+							"timezone": {
+								"$ref": "#/components/schemas/TimezoneDesignator"
+							},
+							"minute": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 59
+							},
+							"hour": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 0,
+								"maximum": 23
+							},
+							"day": {
+								"type": "integer",
+								"format": "int32",
+								"minimum": 1,
+								"maximum": 28
+							}
+						},
+						"required": [
+							"timezone",
+							"minute",
+							"hour",
+							"day"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"custom": {
+						"properties": {
+							"timezone": {
+								"$ref": "#/components/schemas/TimezoneDesignator"
+							},
+							"cron": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"timezone",
+							"cron"
+						],
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"cadence",
+					"enabled",
+					"hourly",
+					"daily",
+					"weekly",
+					"monthly",
+					"custom"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EnumValues_typeofAccessLevelEnum_": {
+				"type": "string",
+				"enum": [
+					"NONE",
+					"APP_ONLY",
+					"CAN_VIEW",
+					"CAN_EDIT",
+					"FULL_ACCESS"
+				]
+			},
+			"AccessLevelEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofAccessLevelEnum_"
+			},
+			"SharingResource": {
+				"properties": {
+					"users": {
+						"items": {
+							"properties": {
+								"access": {
+									"$ref": "#/components/schemas/AccessLevelEnum"
+								},
+								"user": {
+									"properties": {
+										"email": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"email"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"access",
+								"user"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"collections": {
+						"items": {
+							"properties": {
+								"access": {
+									"$ref": "#/components/schemas/AccessLevelEnum"
+								},
+								"collection": {
+									"properties": {
+										"name": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"access",
+								"collection"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"groups": {
+						"items": {
+							"properties": {
+								"access": {
+									"$ref": "#/components/schemas/AccessLevelEnum"
+								},
+								"group": {
+									"properties": {
+										"name": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"access",
+								"group"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"workspace": {
+						"properties": {
+							"access": {
+								"$ref": "#/components/schemas/AccessLevelEnum"
+							}
+						},
+						"required": [
+							"access"
+						],
+						"type": "object"
+					},
+					"publicWeb": {
+						"properties": {
+							"access": {
+								"$ref": "#/components/schemas/AccessLevelEnum"
+							}
+						},
+						"required": [
+							"access"
+						],
+						"type": "object"
+					},
+					"support": {
+						"properties": {
+							"access": {
+								"$ref": "#/components/schemas/AccessLevelEnum"
+							}
+						},
+						"required": [
+							"access"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"users",
+					"collections",
+					"groups",
+					"workspace",
+					"publicWeb",
+					"support"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProjectApiResource": {
+				"properties": {
+					"id": {
+						"$ref": "#/components/schemas/ProjectId"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/ProjectTypeApiEnum"
+					},
+					"creator": {
+						"properties": {
+							"email": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"email"
+						],
+						"type": "object"
+					},
+					"owner": {
+						"properties": {
+							"email": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"email"
+						],
+						"type": "object"
+					},
+					"status": {
+						"properties": {
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"name"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"categories": {
+						"items": {
+							"properties": {
+								"description": {
+									"type": "string",
+									"nullable": true
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"description",
+								"name"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"reviews": {
+						"properties": {
+							"required": {
+								"type": "boolean"
+							}
+						},
+						"required": [
+							"required"
+						],
+						"type": "object"
+					},
+					"analytics": {
+						"properties": {
+							"publishedResultsUpdatedAt": {
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/Timestamp"
+									}
+								],
+								"nullable": true
+							},
+							"lastViewedAt": {
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/Timestamp"
+									}
+								],
+								"nullable": true
+							},
+							"appViews": {
+								"properties": {
+									"lastThirtyDays": {
+										"type": "integer",
+										"format": "int32"
+									},
+									"lastFourteenDays": {
+										"type": "integer",
+										"format": "int32"
+									},
+									"lastSevenDays": {
+										"type": "integer",
+										"format": "int32"
+									},
+									"allTime": {
+										"type": "integer",
+										"format": "int32"
+									}
+								},
+								"required": [
+									"lastThirtyDays",
+									"lastFourteenDays",
+									"lastSevenDays",
+									"allTime"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"publishedResultsUpdatedAt",
+							"lastViewedAt",
+							"appViews"
+						],
+						"type": "object"
+					},
+					"lastEditedAt": {
+						"$ref": "#/components/schemas/Timestamp"
+					},
+					"lastPublishedAt": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Timestamp"
+							}
+						],
+						"nullable": true
+					},
+					"createdAt": {
+						"$ref": "#/components/schemas/Timestamp"
+					},
+					"archivedAt": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Timestamp"
+							}
+						],
+						"nullable": true
+					},
+					"trashedAt": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Timestamp"
+							}
+						],
+						"nullable": true
+					},
+					"schedules": {
+						"items": {
+							"$ref": "#/components/schemas/ScheduleApiResource"
+						},
+						"type": "array"
+					},
+					"sharing": {
+						"$ref": "#/components/schemas/SharingResource"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"description",
+					"type",
+					"creator",
+					"owner",
+					"status",
+					"categories",
+					"reviews",
+					"analytics",
+					"lastEditedAt",
+					"lastPublishedAt",
+					"createdAt",
+					"archivedAt",
+					"trashedAt",
+					"schedules"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiPaginationCursor": {
+				"type": "string",
+				"description": "A cursor string used with `before` and `after` parameters to paginate through a list\nof items on the API."
+			},
+			"PaginationApiResource": {
+				"properties": {
+					"after": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ApiPaginationCursor"
+							}
+						],
+						"nullable": true
+					},
+					"before": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ApiPaginationCursor"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"after",
+					"before"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProjectsListApiResource": {
+				"properties": {
+					"values": {
+						"items": {
+							"$ref": "#/components/schemas/ProjectApiResource"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationApiResource"
+					}
+				},
+				"required": [
+					"values",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PageSize": {
+				"type": "integer",
+				"format": "int32",
+				"default": "25",
+				"description": "Number of results to fetch per page for paginated requests",
+				"minimum": 1,
+				"maximum": 100
+			},
+			"EnumValues_typeofSortByEnum_": {
+				"type": "string",
+				"enum": [
+					"CREATED_AT",
+					"LAST_EDITED_AT",
+					"LAST_PUBLISHED_AT"
+				]
+			},
+			"SortByEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofSortByEnum_"
+			},
+			"EnumValues_typeofSortDirectionEnum_": {
+				"type": "string",
+				"enum": [
+					"DESC",
+					"ASC"
+				]
+			},
+			"SortDirectionEnum": {
+				"$ref": "#/components/schemas/EnumValues_typeofSortDirectionEnum_"
+			},
+			"ResponseRunId": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique ID for a run of a Hex project",
+				"pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+			},
+			"RunUrl": {
+				"type": "string",
+				"description": "URL to view the current progress of the project run in the Hex UI"
+			},
+			"RunStatusUrl": {
+				"type": "string",
+				"description": "URL to query the status of the project run via the Hex API"
+			},
+			"ProjectVersion": {
+				"type": "integer",
+				"format": "int32",
+				"description": "The version of the Hex project that was run. Project versions are ordered, starting at 1 and incrementing on each saved version. Project versions can be found in the History & Versions side bar of the Logic View."
+			},
+			"RunNotificationType": {
+				"description": "The condition that determines whether or not the notification should be delivered based on these types.",
+				"enum": [
+					"SUCCESS",
+					"FAILURE",
+					"ALL"
+				],
+				"type": "string"
+			},
+			"NotificationRecipientType": {
+				"description": "The delivery type of a notification recipient.",
+				"enum": [
+					"USER",
+					"GROUP",
+					"SLACK_CHANNEL"
+				],
+				"type": "string"
+			},
+			"ScreenshotFormatType": {
+				"type": "string",
+				"enum": [
+					"png",
+					"pdf"
+				],
+				"description": "The file format of the generated screenshot."
+			},
+			"NotificationRecipient": {
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The Id of the recipient. For users and groups, these Ids are found in the settings panel in Hex, while the Id for Slack can be found within the Slack app or URL.",
+						"example": "C0123456"
+					},
+					"name": {
+						"type": "string",
+						"description": "The human readable name for the user, group, or Slack channel.",
+						"example": "data-team"
+					},
+					"isPrivate": {
+						"type": "boolean",
+						"description": "Whether or not the Slack channel is a private channel in the Slack workspace.",
+						"example": false
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProjectRunNotificationRecipient": {
+				"description": "The recipient of a project run notification, which will include the type of recipient and additional configuration details.\nThis is used to determine who to send the notification to, and what triggers would qualify sending the notification.",
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/RunNotificationType"
+					},
+					"subject": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"recipientType": {
+						"$ref": "#/components/schemas/NotificationRecipientType"
+					},
+					"includeSuccessScreenshot": {
+						"type": "boolean",
+						"description": "If true, a screenshot of the project will be included in the notification when the project succeeds."
+					},
+					"screenshotFormat": {
+						"items": {
+							"$ref": "#/components/schemas/ScreenshotFormatType"
+						},
+						"type": "array",
+						"description": "The format of the screenshot to be included in the notification.\nDefaults to png only if not specified and includeSuccessScreenshot is true."
+					},
+					"recipient": {
+						"$ref": "#/components/schemas/NotificationRecipient"
+					}
+				},
+				"required": [
+					"type",
+					"recipientType",
+					"includeSuccessScreenshot",
+					"recipient"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProjectRunResponsePayload": {
+				"description": "Response format returned by the runProject endpoint",
+				"properties": {
+					"projectId": {
+						"$ref": "#/components/schemas/ProjectId"
+					},
+					"runId": {
+						"$ref": "#/components/schemas/ResponseRunId"
+					},
+					"runUrl": {
+						"$ref": "#/components/schemas/RunUrl"
+					},
+					"runStatusUrl": {
+						"$ref": "#/components/schemas/RunStatusUrl"
+					},
+					"traceId": {
+						"$ref": "#/components/schemas/TraceId"
+					},
+					"projectVersion": {
+						"$ref": "#/components/schemas/ProjectVersion"
+					},
+					"notifications": {
+						"items": {
+							"$ref": "#/components/schemas/ProjectRunNotificationRecipient"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"projectId",
+					"runId",
+					"runUrl",
+					"runStatusUrl",
+					"traceId",
+					"projectVersion"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"NotFoundParam": {
+				"type": "string",
+				"description": "Name of an input parameter passed to the API call that was not found in the project."
+			},
+			"InvalidParam": {
+				"properties": {
+					"dataType": {
+						"type": "string",
+						"description": "The expected data type of the parameter (number, string, etc.), which the input value should have matched"
+					},
+					"inputCellType": {
+						"type": "string",
+						"description": "The cell input type of the parameter (text, slider, etc.)"
+					},
+					"paramValue": {
+						"type": "string",
+						"description": "The JSON-encoded, invalid value for the parameter"
+					},
+					"paramName": {
+						"type": "string",
+						"description": "The name of the parameter for which an invalid value was provided"
+					}
+				},
+				"required": [
+					"dataType",
+					"inputCellType",
+					"paramValue",
+					"paramName"
+				],
+				"type": "object",
+				"description": "Information about an input parameter pass to the API call that could not be parsed."
+			},
+			"InvalidParamPayload": {
+				"properties": {
+					"traceId": {
+						"$ref": "#/components/schemas/TraceId"
+					},
+					"invalid": {
+						"items": {
+							"$ref": "#/components/schemas/InvalidParam"
+						},
+						"type": "array",
+						"description": "Array of specified input parameters that were invalid or could not be parsed"
+					},
+					"notFound": {
+						"items": {
+							"$ref": "#/components/schemas/NotFoundParam"
+						},
+						"type": "array",
+						"description": "Array of specified input parameter names that were not found in the project"
+					}
+				},
+				"required": [
+					"traceId",
+					"invalid",
+					"notFound"
+				],
+				"type": "object"
+			},
+			"ProjectRunNotification": {
+				"description": "The configuration details for notifications, which are sent after a run has completed.",
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/RunNotificationType"
+					},
+					"includeSuccessScreenshot": {
+						"type": "boolean",
+						"description": "If true, a screenshot of the project will be included in the notification when the project succeeds."
+					},
+					"screenshotFormat": {
+						"$ref": "#/components/schemas/ScreenshotFormatType",
+						"description": "The format of the screenshot to be included in the notification.\nDefaults to png if not specified and includeSuccessScreenshot is true."
+					},
+					"slackChannelIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "The Slack channels to send the notification to.\nThe Hex Slackbot must be added to any private channels included.\nThe Slack Channel Id can be found in the channel's settings from within the Slack app."
+					},
+					"userIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "The Hex user Ids to send the notification to. These Ids can be found and copied from the Setting's User panel in Hex."
+					},
+					"groupIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "The Hex group Ids to send the notification to. These Ids can be found and copied from the Setting's Group panel in Hex."
+					},
+					"subject": {
+						"type": "string",
+						"description": "An optional message to use as the subject of the notification."
+					},
+					"body": {
+						"type": "string",
+						"description": "An optional message to include in the body of the notification."
+					}
+				},
+				"required": [
+					"type",
+					"includeSuccessScreenshot"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RunProjectRequestBody": {
+				"description": "Request body format for triggering a project run",
+				"properties": {
+					"inputParams": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object",
+						"description": "Optionally specify input parameters for this project run.\nThese should be structured as a dictionary of key/value pairs, where the key name matches the name of the variable in the Hex project.\n\nOnly parameters that are added to the published app can be set via this request parameter. Any additional inputs will be ignored.\nIt is invalid to pass in both a viewId and inputParams.\n\nIf no input parameters are provided, the project will be run with the default input values.\nNote that if input parameters are provided, this run will not be able to update the cached values for the project, and the updateCache setting (below) will be ignored.",
+						"example": {
+							"text_input_1": "Hello World",
+							"numeric_input_1": 123
+						}
+					},
+					"dryRun": {
+						"type": "boolean",
+						"description": "When true, this endpoint will perform a dry run that does not run the project. This can be useful for validating the structure of an API call, and inspecting a dummy response, without running a project.",
+						"default": "false"
+					},
+					"updateCache": {
+						"type": "boolean",
+						"deprecated": true
+					},
+					"notifications": {
+						"items": {
+							"$ref": "#/components/schemas/ProjectRunNotification"
+						},
+						"type": "array",
+						"description": "Optionally specify a list of notification details that will be delivered once a project run completes.\nNotifications can be configured for delivery to Slack channels, Hex users, or Hex groups.",
+						"example": [
+							{
+								"type": "ALL",
+								"includeSuccessScreenshot": "true",
+								"slackChannelIds": [
+									"C0000000"
+								],
+								"userIds": [
+									"uuid-user-1",
+									"uuid-user-2"
+								]
+							},
+							{
+								"type": "FAILURE",
+								"includeSuccessScreenshot": "false",
+								"userIds": [
+									"uuid-user-1"
+								],
+								"groupIds": [
+									"uuid-group-1"
+								]
+							}
+						]
+					},
+					"updatePublishedResults": {
+						"type": "boolean",
+						"description": "When true, the cached state of the published app will be updated with the latest\nrun results. You must have at least \"Can Edit\" permissions on the project to do so.\nNote: this cannot be set to true if custom input parameters are provided.",
+						"default": "false"
+					},
+					"useCachedSqlResults": {
+						"type": "boolean",
+						"description": "When false, the project will run without using any cached SQL results, and will\nupdate those cached SQL results.",
+						"default": "true"
+					},
+					"viewId": {
+						"type": "string",
+						"description": "Optionally specify a SavedView viewId to use for the project run. If specified, the saved view's inputs will be used for the project run.\nIt is invalid to pass in both a viewId and inputParams.\nIf not specified, the default inputs will be used."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProjectRunStatus": {
+				"description": "Current status of a project run",
+				"enum": [
+					"PENDING",
+					"RUNNING",
+					"ERRORED",
+					"COMPLETED",
+					"KILLED",
+					"UNABLE_TO_ALLOCATE_KERNEL"
+				],
+				"type": "string"
+			},
+			"ProjectStatusResponsePayload": {
+				"description": "Response format returned by the getRunStatus endpoint",
+				"properties": {
+					"projectId": {
+						"$ref": "#/components/schemas/ProjectId"
+					},
+					"projectVersion": {
+						"$ref": "#/components/schemas/ProjectVersion"
+					},
+					"runId": {
+						"$ref": "#/components/schemas/ResponseRunId"
+					},
+					"runUrl": {
+						"$ref": "#/components/schemas/RunUrl"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ProjectRunStatus"
+					},
+					"startTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true,
+						"description": "UTC timestamp of when the project run started"
+					},
+					"endTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true,
+						"description": "UTC timestamp of when the project run finished"
+					},
+					"elapsedTime": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Total elapsed time for the project run in milliseconds"
+					},
+					"traceId": {
+						"$ref": "#/components/schemas/TraceId"
+					},
+					"notifications": {
+						"items": {
+							"$ref": "#/components/schemas/ProjectRunNotificationRecipient"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"projectId",
+					"projectVersion",
+					"runId",
+					"runUrl",
+					"status",
+					"startTime",
+					"endTime",
+					"elapsedTime",
+					"traceId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InputRunId": {
+				"type": "string",
+				"format": "uuid",
+				"description": "Unique ID for a run of a Hex project. This ID is part of the response returned by the RunProject endpoint. The GetProjectRuns endpoint can also be used to find the specific runs for a project.",
+				"pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+			},
+			"NextPageUrl": {
+				"type": "string",
+				"description": "URL to fetch the next page of results for a paginated API request"
+			},
+			"ProjectRunsResponsePayload": {
+				"properties": {
+					"runs": {
+						"items": {
+							"$ref": "#/components/schemas/ProjectStatusResponsePayload"
+						},
+						"type": "array",
+						"description": "Array of run status payloads in the same format returned by the `GetRunStatus` endpoint"
+					},
+					"nextPage": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/NextPageUrl"
+							}
+						],
+						"nullable": true
+					},
+					"previousPage": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/NextPageUrl"
+							}
+						],
+						"nullable": true
+					},
+					"traceId": {
+						"$ref": "#/components/schemas/TraceId"
+					}
+				},
+				"required": [
+					"runs",
+					"nextPage",
+					"previousPage",
+					"traceId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Offset": {
+				"type": "integer",
+				"format": "int32",
+				"default": "0",
+				"description": "Offset for paginated requests",
+				"minimum": 0
+			},
+			"EmbeddingResponse": {
+				"properties": {
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer"
+			}
+		}
+	},
+	"info": {
+		"title": "Hex API",
+		"version": "1.0.0",
+		"description": "API specification for the Hex External API",
+		"license": {
+			"name": "UNLICENSED"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/projects/{projectId}": {
+			"get": {
+				"operationId": "GetProject",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProjectApiResource"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get metadata about a single project.",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ProjectId"
+						}
+					},
+					{
+						"in": "query",
+						"name": "includeSharing",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/projects": {
+			"get": {
+				"operationId": "ListProjects",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProjectsListApiResource"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all viewable projects, sorted by most recently created first.",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "includeArchived",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "includeComponents",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "includeTrashed",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "includeSharing",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "statuses",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "categories",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "creatorEmail",
+						"required": false,
+						"schema": {
+							"default": null,
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "ownerEmail",
+						"required": false,
+						"schema": {
+							"default": null,
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PageSize"
+						}
+					},
+					{
+						"in": "query",
+						"name": "after",
+						"required": false,
+						"schema": {
+							"default": null
+						}
+					},
+					{
+						"in": "query",
+						"name": "before",
+						"required": false,
+						"schema": {
+							"default": null
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SortByEnum"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortDirection",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SortDirectionEnum"
+						}
+					}
+				]
+			}
+		},
+		"/projects/{projectId}/runs": {
+			"post": {
+				"operationId": "RunProject",
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProjectRunResponsePayload"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+										},
+										{
+											"$ref": "#/components/schemas/InvalidParamPayload"
+										}
+									]
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "Trigger a run of the latest published version of a project.",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ProjectId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RunProjectRequestBody"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetProjectRuns",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProjectRunsResponsePayload"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the status of the API-triggered runs of a project.",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ProjectId"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PageSize"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Offset"
+						}
+					},
+					{
+						"in": "query",
+						"name": "statusFilter",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ProjectRunStatus"
+						}
+					}
+				]
+			}
+		},
+		"/projects/{projectId}/runs/{runId}": {
+			"get": {
+				"operationId": "GetRunStatus",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProjectStatusResponsePayload"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the status of a project run.",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ProjectId"
+						}
+					},
+					{
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/InputRunId"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "CancelRun",
+				"responses": {
+					"204": {
+						"description": ""
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TsoaErrorResponsePayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "Cancel a project run.",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "projectId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ProjectId"
+						}
+					},
+					{
+						"in": "path",
+						"name": "runId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/InputRunId"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "https://app.hex.tech/api/v1"
+		}
+	],
+	"security": [
+		{
+			"bearerAuth": []
+		}
+	]
+}
