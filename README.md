@@ -1,95 +1,111 @@
-# Hex API MCP Server
+# hex-mcp MCP server
 
-This project provides a simple MCP (Model Context Protocol) server for interacting with the Hex API. It allows AI assistants to access Hex projects, run them, and check their status through a standardized interface.
+A MCP server for Hex
 
-## Features
+## Components
 
-- Get project details
-- List projects
-- View project runs and run status
-- Run projects
-- Cancel running projects
+### Resources
 
-## Setup
+The server implements a simple note storage system with:
+- Custom note:// URI scheme for accessing individual notes
+- Each note resource has a name, description and text/plain mimetype
 
-1. Install dependencies:
+### Prompts
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+The server provides a single prompt:
+- summarize-notes: Creates summaries of all stored notes
+  - Optional "style" argument to control detail level (brief/detailed)
+  - Generates prompt combining all current notes with style preference
 
-2. Set up your Hex API Key:
+### Tools
 
-   ```bash
-   export HEX_API_KEY="your_hex_api_key"
-   ```
+The server implements one tool:
+- add-note: Adds a new note to the server
+  - Takes "name" and "content" as required string arguments
+  - Updates server state and notifies clients of resource changes
 
-   Optionally, you can set a custom API base URL:
+## Configuration
 
-   ```bash
-   export HEX_API_BASE_URL="https://your-custom-hex-url.com/api/v1"
-   ```
+[TODO: Add configuration details specific to your implementation]
 
-3. Run the server:
-   ```bash
-   python main.py
-   ```
+## Quickstart
 
-## Using with Claude
+### Install
 
-This MCP server can be installed in Claude Desktop:
+#### Claude Desktop
+
+On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+<details>
+  <summary>Development/Unpublished Servers Configuration</summary>
+  ```
+  "mcpServers": {
+    "hex-mcp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/fran/workspace/hex-mcp",
+        "run",
+        "hex-mcp"
+      ]
+    }
+  }
+  ```
+</details>
+
+<details>
+  <summary>Published Servers Configuration</summary>
+  ```
+  "mcpServers": {
+    "hex-mcp": {
+      "command": "uvx",
+      "args": [
+        "hex-mcp"
+      ]
+    }
+  }
+  ```
+</details>
+
+## Development
+
+### Building and Publishing
+
+To prepare the package for distribution:
+
+1. Sync dependencies and update lockfile:
+```bash
+uv sync
+```
+
+2. Build package distributions:
+```bash
+uv build
+```
+
+This will create source and wheel distributions in the `dist/` directory.
+
+3. Publish to PyPI:
+```bash
+uv publish
+```
+
+Note: You'll need to set PyPI credentials via environment variables or command flags:
+- Token: `--token` or `UV_PUBLISH_TOKEN`
+- Or username/password: `--username`/`UV_PUBLISH_USERNAME` and `--password`/`UV_PUBLISH_PASSWORD`
+
+### Debugging
+
+Since MCP servers run over stdio, debugging can be challenging. For the best debugging
+experience, we strongly recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
+
+
+You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-mcp install main.py
+npx @modelcontextprotocol/inspector uv --directory /Users/fran/workspace/hex-mcp run hex-mcp
 ```
 
-Or test it with the MCP Inspector:
 
-```bash
-mcp dev main.py
-```
-
-## Available Resources
-
-- `project://{project_id}` - Get details about a specific Hex project
-- `projects://list` - List all available Hex projects
-- `project://{project_id}/run/{run_id}` - Get the status of a project run
-- `project://{project_id}/runs` - Get the list of runs for a specific project (with default limit of 25)
-
-## Available Tools
-
-- `run_project` - Run a Hex project with optional parameters
-- `cancel_run` - Cancel a running project
-
-## Example Usage
-
-```
-# List all projects
-Read resource: projects://list
-
-# Get details for a specific project
-Read resource: project://123e4567-e89b-12d3-a456-426614174000
-
-# Get status of a specific run
-Read resource: project://123e4567-e89b-12d3-a456-426614174000/run/98765432-e89b-12d3-a456-426614174000
-
-# List runs for a project
-Read resource: project://123e4567-e89b-12d3-a456-426614174000/runs
-
-# Run a project
-Call tool: run_project
-Arguments:
-  project_id: 123e4567-e89b-12d3-a456-426614174000
-  input_params: {"text_input_1": "Hello World"}
-  update_published_results: true
-
-# Cancel a run
-Call tool: cancel_run
-Arguments:
-  project_id: 123e4567-e89b-12d3-a456-426614174000
-  run_id: 98765432-e89b-12d3-a456-426614174000
-```
-
-## Error Handling
-
-The server will raise appropriate HTTP errors when the Hex API returns error responses. Make sure your API key has appropriate permissions for the actions you're trying to perform.
+Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
