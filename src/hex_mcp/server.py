@@ -10,6 +10,9 @@ from typing import Any
 HEX_API_KEY = getenv("HEX_API_KEY")
 HEX_API_BASE_URL = getenv("HEX_API_URL")
 
+if not HEX_API_KEY or not HEX_API_BASE_URL:
+    raise ValueError("HEX_API_KEY and HEX_API_BASE_URL must be set")
+
 
 # Create an MCP server
 mcp = FastMCP("Hex MCP Server")
