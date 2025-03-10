@@ -1,5 +1,8 @@
 from . import server
 import asyncio
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def main():
