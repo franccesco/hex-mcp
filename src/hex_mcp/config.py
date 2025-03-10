@@ -92,4 +92,4 @@ def get_api_url() -> str:
     Returns:
         The API URL or default URL if not found
     """
-    return os.getenv("HEX_API_URL") or get_config_value("api_url", "https://app.hex.tech")
+    return os.getenv("HEX_API_URL") or get_config_value("api_url", "https://app.hex.tech/api/v1")

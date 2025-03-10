@@ -45,7 +45,7 @@ def run():
 @app.command()
 def config(
     api_key: str = typer.Option(..., help="API key for Hex authentication"),
-    api_url: str = typer.Option("https://app.hex.tech", help="Hex API URL"),
+    api_url: str = typer.Option("https://app.hex.tech/api/v1", help="Hex API URL"),
 ):
     """Configure Hex MCP server with API credentials.
 
