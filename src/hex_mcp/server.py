@@ -5,14 +5,14 @@ import re
 import json
 import backoff
 from typing import Any
+from . import config as config_module
 
-# Environment Variables
-HEX_API_KEY = getenv("HEX_API_KEY")
-HEX_API_BASE_URL = getenv("HEX_API_URL")
+# Get API credentials from config module
+HEX_API_KEY = config_module.get_api_key()
+HEX_API_BASE_URL = config_module.get_api_url()
 
-if not HEX_API_KEY or not HEX_API_BASE_URL:
-    raise ValueError("HEX_API_KEY and HEX_API_BASE_URL must be set")
-
+if not HEX_API_KEY:
+    print("Warning: HEX_API_KEY not found in environment variables or config file")
 
 # Create an MCP server
 mcp = FastMCP("Hex MCP Server")
@@ -242,8 +242,3 @@ async def cancel_hex_run(project_id: str, run_id: str) -> str:
     """
     await hex_request("DELETE", f"/projects/{project_id}/runs/{run_id}")
     return "Run cancelled successfully"
-
-
-if __name__ == "__main__":
-    # Run the server
-    mcp.run()

@@ -1,13 +1,12 @@
 from . import server
-import os
-import sys
 import importlib.metadata
 import typer
 from typing import Optional
-from dotenv import load_dotenv
+import os
+import yaml
+from pathlib import Path
+from . import config as config_module
 
-# Load from .env file first, will be overridden by CLI args
-load_dotenv()
 
 app = typer.Typer(help="Hex MCP Server - Model Context Protocol server for Hex")
 
@@ -22,36 +21,18 @@ def version_callback(value: bool):
 
 @app.callback()
 def main(
-    api_key: Optional[str] = typer.Option(
-        None, "--api-key", help="Hex API Key (overrides HEX_API_KEY environment variable)"
-    ),
-    api_url: Optional[str] = typer.Option(
-        None, "--api-url", help="Hex API URL (overrides HEX_API_URL environment variable)"
-    ),
-    server_name: str = typer.Option("Hex MCP Server", "--server-name", help="Custom name for the MCP server"),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
     version: Optional[bool] = typer.Option(
-        None, "--version", callback=version_callback, is_eager=True, help="Show the version of hex-mcp"
+        None,
+        "--version",
+        callback=version_callback,
+        is_eager=True,
+        help="Show the version of hex-mcp",
     ),
 ):
     """Main entry point for the Hex MCP Server.
 
-    Provides a CLI to run the Hex MCP server with configurable environment variables.
+    Provides a CLI to run the Hex MCP server.
     """
-    # Set up logging
-    if verbose:
-        os.environ["MCP_LOG_LEVEL"] = "DEBUG"
-
-    # Override environment variables if provided
-    if api_key:
-        os.environ["HEX_API_KEY"] = api_key
-
-    if api_url:
-        os.environ["HEX_API_URL"] = api_url
-
-    # Update server name if provided
-    if server_name != "Hex MCP Server":
-        server.mcp.name = server_name
 
 
 @app.command()
@@ -62,16 +43,45 @@ def run():
 
 
 @app.command()
-def dev(port: int = typer.Option(8765, help="Port for development server")):
-    """Run in development mode with the MCP Inspector."""
-    try:
-        from mcp.cli.inspector import run_inspector
+def config(
+    api_key: str = typer.Option(..., help="API key for Hex authentication"),
+    api_url: str = typer.Option("https://app.hex.tech", help="Hex API URL"),
+):
+    """Configure Hex MCP server with API credentials.
 
-        typer.echo(f"Starting {server.mcp.name} in development mode on port {port}...")
-        run_inspector(server_module="hex_mcp.server", server_object="mcp", port=port)
-    except ImportError:
-        typer.echo("Development mode requires mcp[cli] extra. Install with 'pip install \"mcp[cli]\"'")
-        raise typer.Exit(code=1)
+    Saves the configuration to a YAML file in the user's home directory.
+    """
+    # Create or update config file
+    config_data = {
+        "api_key": api_key,
+        "api_url": api_url,
+    }
+
+    # Save config using the config module
+    config_module.save_config(config_data)
+    config_file = config_module.get_config_file_path()
+
+    typer.echo(f"Configuration saved to {config_file}")
+    typer.echo("API Key: " + api_key[:4] + "..." + api_key[-4:] if len(api_key) > 8 else "API Key: [Hidden]")
+    typer.echo(f"API URL: {api_url}")
+
+
+@app.command()
+def show_config():
+    """Show the current configuration."""
+    api_key = config_module.get_api_key()
+    api_url = config_module.get_api_url()
+    config_file = config_module.get_config_file_path()
+
+    typer.echo(f"Configuration file: {config_file}")
+    if api_key:
+        # Show only first and last 4 characters of the API key
+        masked_key = api_key[:4] + "..." + api_key[-4:] if len(api_key) > 8 else "[Hidden]"
+        typer.echo(f"API Key: {masked_key}")
+    else:
+        typer.echo("API Key: Not configured")
+
+    typer.echo(f"API URL: {api_url}")
 
 
 # Keep this to maintain backward compatibility with the entry point
