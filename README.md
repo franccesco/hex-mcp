@@ -1,27 +1,6 @@
 # hex-mcp MCP server
 
-A MCP server for Hex
-
-## Components
-
-### Resources
-
-The server implements a simple note storage system with:
-
-- Custom note:// URI scheme for accessing individual notes
-- Each note resource has a name, description and text/plain mimetype
-
-### Prompts
-
-The server provides a single prompt:
-
-- summarize-notes: Creates summaries of all stored notes
-  - Optional "style" argument to control detail level (brief/detailed)
-  - Generates prompt combining all current notes with style preference
-
-### Tools
-
-The server implements multiple tools to interact with the Hex API:
+A MCP server for Hex that implements the following tools:
 
 - `list_hex_projects`: Lists available Hex projects
 - `search_hex_projects`: Search for Hex projects by pattern
@@ -33,182 +12,75 @@ The server implements multiple tools to interact with the Hex API:
 
 ## Installation
 
+Using uv is the recommended way to install hex-mcp:
+
+```bash
+uv add hex-mcp
+```
+
+Or using pip:
+
 ```bash
 pip install hex-mcp
 ```
 
-For development features:
-
-```bash
-pip install "hex-mcp[dev]"
-```
-
-## Configuration
-
-The Hex MCP server requires two environment variables:
-
-- `HEX_API_KEY`: Your Hex API key
-- `HEX_API_URL`: The Hex API base URL
-
-You can set these in a `.env` file or pass them via command line arguments.
-
-## CLI Usage
-
-The CLI uses [Typer](https://typer.tiangolo.com/) to provide a modern command-line interface:
-
-```
-hex-mcp [OPTIONS] COMMAND [ARGS]...
-```
-
-### Commands
-
-- `run`: Run the MCP server normally (default if no command is specified)
-- `dev`: Run in development mode with the MCP Inspector
-
-### Global Options
-
-These options apply to all commands:
-
-- `--api-key TEXT`: Set the Hex API key (overrides HEX_API_KEY environment variable)
-- `--api-url TEXT`: Set the Hex API URL (overrides HEX_API_URL environment variable)
-- `--server-name TEXT`: Set a custom name for the MCP server (default: "Hex MCP Server")
-- `-v, --verbose`: Enable verbose logging
-- `--version`: Show the version of hex-mcp and exit
-- `--help`: Show help message and exit
-
-### Command-specific Options
-
-#### dev
-
-- `--port INTEGER`: Set the port for the development server (default: 8765)
-
-### Examples
-
-Run the server with environment variables from `.env` file:
-
-```bash
-hex-mcp run
-# or just
-hex-mcp
-```
-
-Run with command line configuration:
-
-```bash
-hex-mcp --api-key your_api_key --api-url https://hex-api.example.com run
-```
-
-Run in development mode:
-
-```bash
-hex-mcp --verbose dev --port 9000
-```
-
-Show version:
+To confirm it's working, you can run:
 
 ```bash
 hex-mcp --version
 ```
 
-Show help:
+## Configuration
+
+### Using the config command (recommended)
+
+The easiest way to configure hex-mcp is by using the `config` command and passing your API key and API URL (optional and defaults to `https://app.hex.tech/api/v1`):
 
 ```bash
-hex-mcp --help
-hex-mcp dev --help
+hex-mcp config --api-key "your_hex_api_key" --api-url "https://app.hex.tech/api/v1"
 ```
 
-## Quickstart
+> [!NOTE]
+> This saves your configuration to a file in your home directory (e.g. `~/.hex-mcp/config.yml`), making it available for all hex-mcp invocations.
 
-### Install
+### Using environment variables
 
-#### Claude Desktop
+Alternatively, the Hex MCP server can be configured with environment variables:
 
-On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+- `HEX_API_KEY`: Your Hex API key
+- `HEX_API_URL`: The Hex API base URL
 
-<details>
-  <summary>Development/Unpublished Servers Configuration</summary>
-  ```
+When setting up environment variables for MCP servers they need to be either global for Cursor to pick them up or make use of uv's `--env-file` flag when invoking the server.
+
+## Using with Cursor
+
+Cursor allows AI agents to interact with Hex via the MCP protocol. Follow these steps to set up and use hex-mcp with Cursor. You can create a `.cursor/mcp.json` file in your project root with the following content:
+
+```json
+{
+  "mcpServers": {
+    "hex-mcp": {
+      "command": "uv",
+      "args": ["run", "hex-mcp", "run"]
+    }
+  }
+}
+```
+
+Alternatively, you can use the `hex-mcp` command directly if it's in your PATH:
+
+```json
+{
   "mcpServers": {
     "hex-mcp": {
       "command": "hex-mcp",
-      "args": [
-        "--api-key",
-        "your_api_key",
-        "--api-url",
-        "your_api_url",
-        "run"
-      ]
+      "args": ["run"]
     }
   }
-  ```
-</details>
-
-<details>
-  <summary>Published Servers Configuration</summary>
-  ```
-  "mcpServers": {
-    "hex-mcp": {
-      "command": "hex-mcp",
-      "env": {
-        "HEX_API_KEY": "your_api_key",
-        "HEX_API_URL": "your_api_url"
-      }
-    }
-  }
-  ```
-</details>
-
-## Development
-
-### Building and Publishing
-
-To prepare the package for distribution:
-
-1. Sync dependencies and update lockfile:
-
-```bash
-uv sync
+}
 ```
 
-2. Build package distributions:
+Once it's up and running, you can use it in Cursor by initiating a new AI (Agent) conversation and ask it to list or run a Hex project.
 
-```bash
-uv build
-```
-
-This will create source and wheel distributions in the `dist/` directory.
-
-3. Publish to PyPI:
-
-```bash
-uv publish
-```
-
-Note: You'll need to set PyPI credentials via environment variables or command flags:
-
-- Token: `--token` or `UV_PUBLISH_TOKEN`
-- Or username/password: `--username`/`UV_PUBLISH_USERNAME` and `--password`/`UV_PUBLISH_PASSWORD`
-
-### Debugging
-
-Since MCP servers run over stdio, debugging can be challenging. For the best debugging
-experience, use our built-in development mode:
-
-```bash
-hex-mcp dev
-```
-
-This will start the MCP Inspector web interface which allows you to:
-
-- See real-time requests and responses
-- Test tools and resources
-- Debug server behavior
-
-For manual inspector usage:
-
-```bash
-npx @modelcontextprotocol/inspector hex-mcp
-```
-
-Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
+> [!IMPORTANT]
+> The MCP server and CLI is still in development and subject to breaking changes.
