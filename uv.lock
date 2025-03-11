@@ -75,7 +75,7 @@ wheels = [
 
 [[package]]
 name = "hex-mcp"
-version = "0.1.7"
+version = "0.1.8"
 source = { editable = "." }
 dependencies = [
     { name = "backoff" },

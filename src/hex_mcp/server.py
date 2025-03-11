@@ -169,7 +169,7 @@ async def get_hex_project(project_id: str) -> str:
         JSON string with project details
     """
     project = await hex_request("GET", f"/projects/{project_id}")
-    return str(project)
+    return project
 
 
 @mcp.tool()

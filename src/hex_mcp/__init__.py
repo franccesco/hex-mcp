@@ -38,7 +38,6 @@ def main(
 @app.command()
 def run():
     """Run the MCP server normally."""
-    typer.echo(f"Starting {server.mcp.name}...")
     server.mcp.run()
 
 
