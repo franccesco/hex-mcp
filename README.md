@@ -1,4 +1,5 @@
 # hex-mcp MCP server
+[![smithery badge](https://smithery.ai/badge/@franccesco/hex-mcp)](https://smithery.ai/server/@franccesco/hex-mcp)
 
 A MCP server for Hex that implements the following tools:
 
@@ -12,6 +13,15 @@ A MCP server for Hex that implements the following tools:
 
 ## Installation
 
+### Installing via Smithery
+
+To install Hex MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@franccesco/hex-mcp):
+
+```bash
+npx -y @smithery/cli install @franccesco/hex-mcp --client claude
+```
+
+### Installing Manually
 Using uv is the recommended way to install hex-mcp:
 
 ```bash
