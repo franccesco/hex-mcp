@@ -1,6 +1,43 @@
 # hex-mcp MCP server
 
-A MCP server for Hex that implements the following tools:
+A MCP server for Hex that implements orchestration and monitoring tools.
+
+## What This Does (And Doesn't Do)
+
+### Practical Use Cases
+
+**Orchestration and Automation**:
+- Trigger Hex project runs from external systems (Airflow DAGs, CI/CD pipelines)
+- Monitor run status programmatically
+- Cancel long-running or stuck executions
+- Discover and search projects across workspaces
+
+**Operational Monitoring**:
+- Check if scheduled runs completed successfully
+- Get run history for auditing
+- Programmatic access to project metadata (owner, last edited, description)
+
+### Critical Limitations
+
+**Cannot access notebook content**:
+- Cannot read cell content (queries, markdown, code, visualizations)
+- Cannot write or edit cells
+- Cannot modify notebook structure
+- Cannot view query results or charts
+- Cannot manage notebook dependencies or parameters
+
+**Not suitable for**:
+- Building or authoring notebooks
+- Collaborative notebook development
+- Debugging queries or code
+- Content migration or backup
+- Any task requiring access to actual notebook cells
+
+### When to Use This
+
+Use hex-mcp when you need to **orchestrate** Hex executions from external systems or **monitor** run status. For notebook development, use the Hex web UI directly.
+
+## Available Tools
 
 - `list_hex_projects`: Lists available Hex projects
 - `search_hex_projects`: Search for Hex projects by pattern
@@ -84,3 +121,27 @@ Once it's up and running, you can use it in Cursor by initiating a new AI (Agent
 
 > [!IMPORTANT]
 > The MCP server and CLI is still in development and subject to breaking changes.
+
+## About This Fork
+
+This fork contains fixes for return type mismatches in the upstream hex-mcp package (v0.1.10).
+
+**Bugs Fixed**:
+- Five tools declared `-> str` return type but returned Python dicts/lists
+- Caused pydantic validation errors in Claude Code MCP integration
+- Fixed by adding `json.dumps()` to return statements in `src/hex_mcp/server.py`
+
+**Fixed Tools** (lines 74, 172, 187, 206, 229):
+- `list_hex_projects()`
+- `get_hex_project()`
+- `get_hex_run_status()`
+- `get_hex_project_runs()`
+- `run_hex_project()`
+
+**Already Working** (correctly implemented):
+- `search_hex_projects()` (already used `json.dumps()`)
+- `cancel_hex_run()` (returns string literal)
+
+**Upstream**: https://github.com/franccesco/hex-mcp
+
+This bugfix branch (`bugfix/fast-mcp-return-types`) is ready for upstream PR submission if desired.

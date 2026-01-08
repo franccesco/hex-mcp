@@ -13,3 +13,6 @@ wheels/
 
 # Cursor
 .cursor/
+
+# Dribs and drabs
+IMPLEMENTATION-PLAN.md
