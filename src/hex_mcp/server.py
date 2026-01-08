@@ -71,7 +71,7 @@ async def list_hex_projects(limit: int = 25, offset: int = 0) -> str:
     """
     params = {"limit": limit, "offset": offset}
     projects = await hex_request("GET", "/projects", params=params)
-    return projects["values"]
+    return json.dumps(projects["values"])
 
 
 @mcp.tool()
@@ -169,7 +169,7 @@ async def get_hex_project(project_id: str) -> str:
         JSON string with project details
     """
     project = await hex_request("GET", f"/projects/{project_id}")
-    return project
+    return json.dumps(project)
 
 
 @mcp.tool()
@@ -184,7 +184,7 @@ async def get_hex_run_status(project_id: str, run_id: str) -> str:
         JSON string with run status details
     """
     status = await hex_request("GET", f"/projects/{project_id}/runs/{run_id}")
-    return status
+    return json.dumps(status)
 
 
 @mcp.tool()
@@ -203,7 +203,7 @@ async def get_hex_project_runs(project_id: str, limit: int = 25, offset: int = 0
     params = {"limit": limit, "offset": offset}
 
     runs = await hex_request("GET", f"/projects/{project_id}/runs", params=params)
-    return runs
+    return json.dumps(runs)
 
 
 @mcp.tool()
@@ -226,7 +226,7 @@ async def run_hex_project(project_id: str, input_params: dict = None, update_pub
     }
 
     result = await hex_request("POST", f"/projects/{project_id}/runs", json=run_config)
-    return result
+    return json.dumps(result)
 
 
 @mcp.tool()
