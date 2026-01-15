@@ -1,3 +1,18 @@
+"""Hex MCP - Command-line interface for Hex MCP Server.
+
+This module provides the CLI commands for configuring, installing, and running
+the Hex MCP server. The CLI is built with Typer and supports multiple commands:
+
+Commands:
+    run: Start the MCP server for client connections
+    config: Configure API credentials
+    show-config: Display current configuration
+    install: Generate Cursor IDE integration configuration
+
+The server integrates with Hex API to provide project management, cell operations,
+and permission control through the Model Context Protocol.
+"""
+
 from . import server
 import importlib.metadata
 import typer
