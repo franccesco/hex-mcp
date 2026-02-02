@@ -1,0 +1,31 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - hexApiKey
+    properties:
+      hexApiKey:
+        type: string
+        description: Your Hex API key.
+      hexApiUrl:
+        type: string
+        default: https://app.hex.tech/api/v1
+        description: The Hex API base URL.
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'hex-mcp',
+      args: ['run'],
+      env: {
+        HEX_API_KEY: config.hexApiKey,
+        HEX_API_URL: config.hexApiUrl
+      }
+    })
+  exampleConfig:
+    hexApiKey: your_dummy_hex_api_key
+    hexApiUrl: https://app.hex.tech/api/v1
